@@ -12,6 +12,7 @@
       :index="item.path"
       v-for="item in noChildren"
       :key="item.path"
+      @click="clickMenu(item)"
     >
       <i :class="'el-icon-' + item.icon"></i>
       <span slot="title">{{ item.label }}</span>
@@ -33,7 +34,9 @@
           :index="subItem.path"
           v-for="(subItem, subIndex) in item.children"
           :key="subIndex"
+          @click="clickMenu(subItem)"
         >
+          <i :class="'el-icon-' + item.icon"></i>
           {{ subItem.label }}</el-menu-item
         >
       </el-menu-item-group>
@@ -75,6 +78,7 @@ export default {
 
       {
         label: "其他",
+        name: "other",
         icon: "user",
         children: [
           {
@@ -92,7 +96,12 @@ export default {
         ]
       }
     ]
-  })
+  }),
+  methods: {
+    clickMenu(item) {
+      this.$store.commit("selectMenu", item);
+    }
+  }
 };
 </script>
 

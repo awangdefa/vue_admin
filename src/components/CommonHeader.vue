@@ -5,7 +5,9 @@
       <!-- 面包屑导航 -->
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
+        <el-breadcrumb-item :to="currentMenuItem.path" v-if="currentMenuItem"
+          >{{ currentMenuItem.label }}
+        </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="r-content">
@@ -24,8 +26,14 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "common-header",
+  computed: {
+    ...mapState({
+      currentMenuItem: state => state.tab.currentMenuItem
+    })
+  },
   data: () => ({
     userImg: require("@/assets/images/userImg.gif")
   })
@@ -58,8 +66,10 @@ header {
 </style>
 
 <style lang="scss">
-.el-breadcrumb__inner a,
-.el-breadcrumb__inner.is-link {
+// 修改elementUI样式
+// 面包屑最后一个元素:link的直接显示
+.el-breadcrumb__item:last-child .el-breadcrumb__inner {
   color: white;
+  font-weight: 1000;
 }
 </style>
