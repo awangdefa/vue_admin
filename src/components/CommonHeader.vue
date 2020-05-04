@@ -6,6 +6,7 @@
         type="primary"
         icon="el-icon-menu"
         size="mini"
+        plain
       ></el-button>
       <!-- 面包屑导航 -->
       <el-breadcrumb separator="/">
