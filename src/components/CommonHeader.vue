@@ -1,7 +1,12 @@
 <template>
   <header>
     <div class="l-content">
-      <el-button type="primary" icon="el-icon-menu" size="mini"></el-button>
+      <el-button
+        @click="collapseMenu"
+        type="primary"
+        icon="el-icon-menu"
+        size="mini"
+      ></el-button>
       <!-- 面包屑导航 -->
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -36,7 +41,12 @@ export default {
   },
   data: () => ({
     userImg: require("@/assets/images/userImg.gif")
-  })
+  }),
+  methods: {
+    collapseMenu() {
+      this.$store.commit("collapseMenu");
+    }
+  }
 };
 </script>
 
@@ -66,10 +76,21 @@ header {
 </style>
 
 <style lang="scss">
-// 修改elementUI样式
-// 面包屑最后一个元素:link的直接显示
 .el-breadcrumb__item:last-child .el-breadcrumb__inner {
   color: white;
   font-weight: 1000;
+}
+.el-breadcrumb__inner a:hover,
+.el-breadcrumb__inner.is-link:hover {
+  color: white;
+  cursor: pointer;
+}
+.el-breadcrumb__item:last-child .el-breadcrumb__inner,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
+  font-weight: 400;
+  color: white;
+  cursor: pointer;
 }
 </style>

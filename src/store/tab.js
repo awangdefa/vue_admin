@@ -1,5 +1,6 @@
 export default {
   state: {
+    isCollapse: false,
     menu: [],
     currentMenuItem: null,
     tabList: [
@@ -12,7 +13,7 @@ export default {
     ]
   },
   mutations: {
-    /*点击左侧菜单触发*/
+    /*点击左侧菜单触发,对currentMenuItem处理，显示面包屑*/
     selectMenu(state, value) {
       // 排除"首页"
       if (value.name !== "home") {
@@ -30,6 +31,10 @@ export default {
     closeTag(state, value) {
       const result = state.tabList.findIndex(item => item.name === value.name);
       state.tabList.splice(result, 1);
+    },
+
+    collapseMenu(state) {
+      state.isCollapse = !state.isCollapse;
     }
   },
   actions: {}

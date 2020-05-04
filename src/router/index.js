@@ -1,6 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+// 解决NavigationDuplicated报错
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject);
+  return originalPush.call(this, location).catch(err => err);
+};
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -16,7 +24,7 @@ const routes = [
       {
         path: "/video",
         name: "video",
-        component: () => import("@/views/UserManage/UserManage")
+        component: () => import("@/views/VideoManage/VideoManage")
       },
       {
         path: "/user",

@@ -1,11 +1,12 @@
 <template>
   <!-- 主菜单 -->
   <el-menu
-    default-active="2"
+    default-active="/"
     class="el-menu-vertical-demo"
-    background-color="#33aef0"
+    background-color="#409eff"
     text-color="#fff"
     active-text-color="#ffd04b"
+    :collapse="isCollapse"
   >
     <!-- 项目 -->
     <el-menu-item
@@ -53,6 +54,9 @@ export default {
     },
     hasChildren() {
       return this.asideMenu.filter(item => item.children);
+    },
+    isCollapse() {
+      return this.$store.state.tab.isCollapse;
     }
   },
   data: () => ({
@@ -99,6 +103,7 @@ export default {
   }),
   methods: {
     clickMenu(item) {
+      this.$router.push({ name: item.name });
       this.$store.commit("selectMenu", item);
     }
   }
@@ -109,5 +114,9 @@ export default {
 .el-menu {
   height: 100%;
   border: none;
+}
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
 }
 </style>

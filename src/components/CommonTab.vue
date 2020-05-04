@@ -7,19 +7,10 @@
       :closable="tag.name !== 'home'"
       :disable-transitions="false"
       @close="handleClose(tag)"
+      @click="changeMenu(tag)"
     >
       {{ tag.label }}
     </el-tag>
-    <el-input
-      class="input-new-tag"
-      v-if="inputVisible"
-      v-model="inputValue"
-      ref="saveTagInput"
-      size="small"
-      @keyup.enter.native="handleInputConfirm"
-      @blur="handleInputConfirm"
-    >
-    </el-input>
   </div>
 </template>
 
@@ -45,6 +36,10 @@ export default {
     }),
     handleClose(tag) {
       this.closeTag(tag);
+    },
+    changeMenu(tag) {
+      this.$router.push({ name: tag.name });
+      this.$store.commit("selectMenu", tag);
     }
   }
 };
@@ -55,6 +50,7 @@ export default {
   padding: 20px;
   .el-tag {
     margin-right: 15px;
+    cursor: pointer;
   }
 }
 </style>
