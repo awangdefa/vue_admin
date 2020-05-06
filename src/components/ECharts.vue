@@ -27,12 +27,20 @@ export default {
         this.initChart();
       },
       deep: true
+    },
+    isCollapse() {
+      setTimeout(() => {
+        this.resizeChart();
+      }, 300);
     }
   },
   computed: {
     options() {
       // 根据是否有轴 把有轴和无轴的选项值给options
       return this.isAxisChart ? this.axisOption : this.normalOption;
+    },
+    isCollapse() {
+      return this.$store.state.tab.isCollapse;
     }
   },
   data() {
@@ -116,7 +124,6 @@ export default {
   methods: {
     initChart() {
       this.initChartData();
-
       // 判断容器的存在并初始化容器
       if (this.echartContainer) {
         this.echartContainer.setOption(this.options);
@@ -133,10 +140,18 @@ export default {
       } else {
         this.normalOption.series = this.charData.series;
       }
+    },
+    resizeChart() {
+      // 对图表尺寸重新计算
+      this.echartContainer ? this.echartContainer.resize() : "";
     }
   },
   mounted() {
     this.initChart();
+    window.addEventListener("resize", this.resizeChart);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.resizeChart);
   }
 };
 </script>
