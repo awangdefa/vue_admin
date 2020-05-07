@@ -1,9 +1,7 @@
 <template>
   <el-form :model="formInline" class="form">
     <el-row>
-      <el-col :span="16"
-        ><el-button type="primary" >新增</el-button></el-col
-      >
+      <el-col :span="16"><el-button type="primary">新增</el-button></el-col>
 
       <el-col :span="8" class="a">
         <el-input
@@ -11,9 +9,7 @@
           placeholder="请输入"
           class="input-search"
         ></el-input>
-        <el-button type="primary" class="btn-search"
-          >查询</el-button
-        >
+        <el-button type="primary" class="btn-search">查询</el-button>
       </el-col>
     </el-row>
   </el-form>
@@ -30,9 +26,7 @@ export default {
       }
     };
   },
-  methods: {
-
-  }
+  methods: {}
 };
 </script>
 
