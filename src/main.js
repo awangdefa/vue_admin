@@ -13,9 +13,11 @@ import "./mock";
 
 import ElementUI from "element-ui";
 
+Vue.config.productionTip = process.env.NODE_ENV === "production";
+console.log(process.env.VUE_APP_SERVICE_URL); // 开发环境 development, 生产环境 production
+
 Vue.use(ElementUI);
 Vue.prototype.$http = http;
-Vue.config.productionTip = false;
 
 new Vue({
   router,

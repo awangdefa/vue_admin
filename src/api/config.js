@@ -1,13 +1,14 @@
 import axios from "axios";
 
 // 创建一个axios实例
-const service = axios.create({
+const request = axios.create({
+  baseURL: process.env.VUE_APP_BASE_API,
   // 请求超时时间
   timeout: 3000
 });
 
 // 添加请求拦截器
-service.interceptors.request.use(
+request.interceptors.request.use(
   config => {
     return config;
   },
@@ -17,7 +18,7 @@ service.interceptors.request.use(
 );
 
 // 添加响应拦截器
-service.interceptors.response.use(
+request.interceptors.response.use(
   response => {
     const res = {};
     res.status = response.status;
@@ -29,4 +30,4 @@ service.interceptors.response.use(
   }
 );
 
-export default service;
+export default request;

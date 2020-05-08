@@ -15,13 +15,14 @@
         <el-input v-model="form.password" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">登录</el-button>
+        <el-button type="primary" @click="submitForm('form')">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import restApi from "@/api/restApi.js";
 export default {
   data() {
     return {
@@ -37,7 +38,30 @@ export default {
       }
     };
   },
-  methods: {}
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // 校验成功提交表单
+          alert("登录成功!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    fetchData() {
+      restApi.getTestData().then(response => {
+        console.log(response);
+      });
+    }
+  },
+  mounted() {
+    this.fetchData();
+  }
 };
 </script>
 
