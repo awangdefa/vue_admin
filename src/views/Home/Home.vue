@@ -193,7 +193,7 @@ export default {
           data: res.videoData,
           type: "pie"
         });
-        console.log(this.echartData.order);
+        // console.log(this.echartData.order);
       });
     }
   },

@@ -136,7 +136,7 @@ export default {
       if (this.isAxisChart) {
         this.axisOption.xAxis.data = this.charData.xData;
         this.axisOption.series = this.charData.series;
-        console.log(this.axisOption, "123123");
+        // console.log(this.axisOption, "123123");
       } else {
         this.normalOption.series = this.charData.series;
       }

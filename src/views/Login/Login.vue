@@ -1,32 +1,34 @@
 <template>
   <div class="login-container">
     <el-form
-      ref="form"
+      ref="loginform"
       :rules="rules"
-      :model="form"
+      :model="loginform"
       label-width="80px"
       class="login-form"
     >
       <h2 class="login-title">后台管理系统</h2>
       <el-form-item label="帐号" prop="username">
-        <el-input v-model="form.username"></el-input>
+        <el-input v-model="loginform.username"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="form.password" type="password"></el-input>
+        <el-input v-model="loginform.password" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('form')">登录</el-button>
+        <el-button type="primary" @click="submitForm('loginform')"
+          >登录</el-button
+        >
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import restApi from "@/api/restApi.js";
+import { login, getUserInfo } from "@/api/restApi.js";
 export default {
   data() {
     return {
-      form: {
+      loginform: {
         username: "",
         password: ""
       },
@@ -43,7 +45,37 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 校验成功提交表单
-          alert("登录成功!");
+          this.$message({
+            message: "登录成功",
+            type: "success",
+            duration: 500
+          });
+
+          login(this.loginform.username, this.loginform.password).then(
+            response => {
+              const userToken = response.data;
+              // console.log(userToken,'userToken');
+              if (response.data.flag) {
+                // 通过
+                getUserInfo(response.data.data.token).then(response => {
+                  const userInfo = response.data.data;
+                  // console.log(userInfo,'userInfo');
+                  localStorage.setItem(
+                    "vue-admin-userInfo",
+                    JSON.stringify(userInfo)
+                  );
+                  localStorage.setItem(
+                    "vue-admin-userToken",
+                    JSON.stringify(userToken)
+                  );
+                  this.$router.push("/");
+                });
+              } else {
+                // 未通过
+                // this.$message.error("登录失败");
+              }
+            }
+          );
         } else {
           console.log("error submit!!");
           return false;
@@ -52,16 +84,9 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    },
-    fetchData() {
-      restApi.getTestData().then(response => {
-        console.log(response);
-      });
     }
   },
-  mounted() {
-    this.fetchData();
-  }
+  mounted() {}
 };
 </script>
 

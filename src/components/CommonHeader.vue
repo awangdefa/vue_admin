@@ -18,13 +18,17 @@
     </div>
     <div class="r-content">
       <!-- 下拉菜单 -->
-      <el-dropdown trigger="click">
+      <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link"
           ><img :src="userImg" class="userImg" />
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item icon="el-icon-plus">个人中心</el-dropdown-item>
-          <el-dropdown-item icon="el-icon-circle-plus">退出</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-edit" command="a"
+            >修改密码</el-dropdown-item
+          >
+          <el-dropdown-item icon="el-icon-s-fold" command="b"
+            >退出系统</el-dropdown-item
+          >
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -32,6 +36,7 @@
 </template>
 
 <script>
+import { logout } from "@/api/restApi.js";
 import { mapState } from "vuex";
 export default {
   name: "common-header",
@@ -46,6 +51,37 @@ export default {
   methods: {
     collapseMenu() {
       this.$store.commit("collapseMenu");
+    },
+    handleCommand(command) {
+      switch (command) {
+        case "a":
+          this.$message("点击了修改密码");
+          break;
+        case "b":
+          logout(localStorage.getItem("vue-admin-userToken")).then(response => {
+            console.log(response);
+            if (response.data.flag) {
+              // 退出成功，清除本地数据
+              localStorage.removeItem("vue-admin-userToken");
+              localStorage.removeItem("vue-admin-userInfo");
+              this.$message({
+                message: response.data.message,
+                type: "success",
+                duration: 500
+              });
+              this.$router.push("/login");
+            } else {
+              this.$message({
+                message: response.data.message,
+                type: "warning",
+                duration: 500
+              });
+            }
+          });
+          break;
+        default:
+          break;
+      }
     }
   }
 };

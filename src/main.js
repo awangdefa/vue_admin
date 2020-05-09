@@ -13,6 +13,9 @@ import "./mock";
 
 import ElementUI from "element-ui";
 
+// 权限拦截
+import "@/api/authority.js";
+
 Vue.config.productionTip = process.env.NODE_ENV === "production";
 console.log(process.env.VUE_APP_SERVICE_URL); // 开发环境 development, 生产环境 production
 
