@@ -34,3 +34,22 @@ export function logout(token) {
     }
   });
 }
+
+// 获取会员列表数据
+export function getList() {
+  return request({
+    method: "get",
+    url: `/ok/member/list`
+  });
+}
+
+// 分页查询,
+// page当前页码, size 每页显示条数, searchMap 条件
+// 后台要通过 page 和 size 统计本次请求响应的数据
+export function search(page, size, searchMap) {
+  return request({
+    url: `/ok/member/list/search/${page}/${size}`,
+    method: "post",
+    data: searchMap
+  });
+}
