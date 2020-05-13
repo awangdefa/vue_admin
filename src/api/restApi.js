@@ -53,3 +53,37 @@ export function search(page, size, searchMap) {
     data: searchMap
   });
 }
+
+// 添加dialog 新增会员接口
+export function addUser(form) {
+  return request({
+    url: `/ok/member`,
+    method: "post",
+    data: form
+  });
+}
+
+// 会员 ID 查询数据接口
+export function getById(id) {
+  return request({
+    url: `/ok/member/${id}`,
+    method: "get"
+  });
+}
+
+// 会员数据更新
+export function upDate(form) {
+  return request({
+    url: `/ok/member/${form.id}`,
+    method: "put",
+    data: form
+  });
+}
+
+// 删除会员数据
+export function delById(id) {
+  return request({
+    url: `/ok/member/${id}`,
+    method: "delete"
+  });
+}

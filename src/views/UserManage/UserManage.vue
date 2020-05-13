@@ -38,71 +38,7 @@
       </el-form-item>
 
       <!-- 新增用户 -->
-      <el-button type="primary" @click="dialogFormVisible = true"
-        >新增</el-button
-      >
-
-      <el-dialog title="增加用户" :visible.sync="dialogFormVisible" width="30%">
-        <el-form
-          ref="addUserInfoForm"
-          :model="addUserInfoForm"
-          label-width="80px"
-          label-position="right"
-          style="width:400px"
-        >
-          <el-form-item label="会员卡号" prop="cardNum" autocomplete="off">
-            <el-input v-model="addUserInfoForm.cardNum" />
-          </el-form-item>
-          <el-form-item label="会员姓名" prop="name">
-            <el-input v-model="addUserInfoForm.name" />
-          </el-form-item>
-          <el-form-item label="会员生日" prop="birthday">
-            <el-date-picker
-              v-model="addUserInfoForm.birthday"
-              type="date"
-              placeholder="请点击选择"
-            />
-          </el-form-item>
-          <el-form-item label="手机号码" prop="phone">
-            <el-input v-model="addUserInfoForm.phone" />
-          </el-form-item>
-          <el-form-item label="开卡金额" prop="money">
-            <el-input v-model="addUserInfoForm.money" />
-          </el-form-item>
-          <el-form-item label="可用积分">
-            <el-input v-model="addUserInfoForm.integral"></el-input>
-          </el-form-item>
-          <el-form-item label="支付类型" prop="payType">
-            <el-select
-              v-model="addUserInfoForm.payType"
-              class="filter-item"
-              placeholder="请点击选择"
-            >
-              <el-option
-                v-for="option in payTypeOptions"
-                :key="option.type"
-                :label="option.name"
-                :value="option.type"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="会员地址">
-            <el-input
-              v-model="addUserInfoForm.address"
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4 }"
-              placeholder="请输入地址"
-            />
-          </el-form-item>
-        </el-form>
-
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false"
-            >确 定</el-button
-          >
-        </div>
-      </el-dialog>
+      <el-button type="primary" @click="handleAdd()">新增</el-button>
 
       <el-form-item class="resetBtn">
         <el-button @click="resetForm('searchForm')">重置</el-button>
@@ -155,11 +91,87 @@
       >
       </el-pagination>
     </div>
+
+    <!-- 弹出新增窗口 -->
+    <el-dialog title="会员编辑" :visible.sync="dialogFormVisible" width="380px">
+      <el-form
+        :rules="rules"
+        ref="addUserInfoForm"
+        :model="addUserInfoForm"
+        label-width="80px"
+        label-position="right"
+        style="width:400px"
+      >
+        <el-form-item label="会员卡号" prop="cardNum" autocomplete="off">
+          <el-input v-model="addUserInfoForm.cardNum" style="width:220px" />
+        </el-form-item>
+        <el-form-item label="会员姓名" prop="name">
+          <el-input v-model="addUserInfoForm.name" style="width:220px" />
+        </el-form-item>
+        <el-form-item label="会员生日" prop="birthday">
+          <el-date-picker
+            value-format="yyyy-MM-dd"
+            v-model="addUserInfoForm.birthday"
+            type="date"
+            placeholder="请点击选择"
+          />
+        </el-form-item>
+        <el-form-item label="手机号码" prop="phone">
+          <el-input v-model="addUserInfoForm.phone" style="width:220px" />
+        </el-form-item>
+        <el-form-item label="开卡金额" prop="money">
+          <el-input v-model="addUserInfoForm.money" style="width:220px" />
+        </el-form-item>
+        <el-form-item label="可用积分" prop="integral">
+          <el-input
+            v-model="addUserInfoForm.integral"
+            style="width:220px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="支付类型" prop="payType">
+          <el-select
+            v-model="addUserInfoForm.payType"
+            class="filter-item"
+            placeholder="请点击选择"
+            style="width:220px"
+          >
+            <el-option
+              v-for="option in payTypeOptions"
+              :key="option.type"
+              :label="option.name"
+              :value="option.type"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="会员地址" prop="address">
+          <el-input
+            v-model="addUserInfoForm.address"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            placeholder="请输入地址"
+            style="width:220px"
+          />
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer" style="width:250px">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="
+            addUserInfoForm.id === null
+              ? addData('addUserInfoForm')
+              : upData('addUserInfoForm')
+          "
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { search } from "@/api/restApi.js";
+import { search, addUser, getById, upDate, delById } from "@/api/restApi.js";
 
 // 支付类型
 const payTypeOptions = [
@@ -191,6 +203,7 @@ export default {
       ],
       // 提交的数据
       addUserInfoForm: {
+        id: null,
         cardNum: "",
         name: "",
         birthday: "",
@@ -201,7 +214,14 @@ export default {
         address: ""
       },
       dialogTableVisible: false,
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      rules: {
+        cardNum: [{ required: true, message: "卡号不能为空", trigger: "blur" }],
+        name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+        payType: [
+          { required: true, message: "支付类型不能为空", trigger: "change" }
+        ]
+      }
     };
   },
   created() {
@@ -215,11 +235,46 @@ export default {
         console.log(response.data.data);
       });
     },
+    // 打开编辑会员窗口
     handleEdit(id) {
-      console.log(id);
+      // 清空原数据
+      this.handleAdd();
+      getById(id).then(response => {
+        const {
+          data: { flag, data }
+        } = response;
+        // console.log(flag, "---", data);
+        if (flag) {
+          this.addUserInfoForm = data;
+        }
+      });
     },
+    // 删除会员按钮
     handleDele(id) {
       console.log(id);
+      this.$confirm("确认删除这条记录吗？", "提示", {
+        confirmButtonText: "确认",
+        concelButtonText: "取消"
+      })
+        .then(() => {
+          // 确认
+          delById(id).then(response => {
+            const {
+              data: { flag, message }
+            } = response;
+            this.$message({
+              message,
+              type: flag ? "success" : "error"
+            });
+            if (flag) {
+              // 删除成功，刷新列表
+              this.fetchData();
+            }
+          });
+        })
+        .catch(() => {
+          // 取消 自动关闭
+        });
     },
     handleSizeChange(val) {
       this.pageSize = val;
@@ -231,6 +286,60 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    // 弹出新增窗口
+    handleAdd() {
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs["addUserInfoForm"].resetFields();
+      });
+    },
+    // 提交新增数据
+    addData(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          addUser(this.addUserInfoForm).then(response => {
+            const {
+              data: { flag, message }
+            } = response;
+            if (flag) {
+              this.fetchData();
+              this.dialogFormVisible = false;
+            } else {
+              this.$message({
+                message,
+                type: "warning"
+              });
+            }
+          });
+        } else {
+          return false;
+        }
+      });
+    },
+    // 提交编辑更新数据
+    upData(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // 提交更新
+          upDate(this.addUserInfoForm).then(response => {
+            // console.log(response);
+            const {
+              data: { flag, message }
+            } = response;
+            if (flag) {
+              // 刷新列表
+              this.fetchData();
+              this.dialogFormVisible = false;
+            } else {
+              this.$message({
+                message,
+                type: "warning"
+              });
+            }
+          });
+        }
+      });
     }
   },
   filters: {
