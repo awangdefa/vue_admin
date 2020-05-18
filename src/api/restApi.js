@@ -87,3 +87,27 @@ export function delById(id) {
     method: "delete"
   });
 }
+
+// 校验密码是否正确
+export function checkPassword(uid, password) {
+  return request({
+    url: `/ok/user/pwd`,
+    method: "post",
+    data: {
+      uid,
+      password
+    }
+  });
+}
+
+// 修改密码接口
+export function updatePassword(uid, password) {
+  return request({
+    url: `/ok/user/pwd`,
+    method: "put",
+    data: {
+      uid,
+      password
+    }
+  });
+}

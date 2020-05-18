@@ -47,8 +47,7 @@ export default {
           // 校验成功提交表单
           this.$message({
             message: "登录成功",
-            type: "success",
-            duration: 500
+            type: "success"
           });
 
           login(this.loginform.username, this.loginform.password).then(
